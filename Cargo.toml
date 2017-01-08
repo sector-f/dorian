@@ -1,0 +1,16 @@
+[package]
+name = "dorian"
+version = "0.1.0"
+authors = ["Adam <sector-f@users.noreply.github.com>"]
+
+[dependencies]
+piston = "0.27.0"
+piston2d-graphics = "0.19.0"
+piston2d-opengl_graphics = "0.36.0"
+pistoncore-sdl2_window = "0.37.0"
+piston_window = "0.59"
+image = "0.10.4"
+clap = "2.19"
+futures = "*"
+futures-spawn = "*"
+futures-threadpool = "*"
