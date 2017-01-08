@@ -81,37 +81,57 @@ impl Viewer {
         gl.draw(args.viewport(), |c, gl| {
             graphics::clear([0.0, 0.0, 0.0, 1.0], gl);
 
-            if let Some(picture) = self.current_image().image() {
-                let win_w = args.draw_width;
-                let win_h = args.draw_height;
+            let win_w = args.draw_width;
+            let win_h = args.draw_height;
 
+            if let Some(picture) = self.current_image().image() {
                 let img_w = picture.width();
                 let img_h = picture.height();
 
-                let x_scale =
-                    if img_w > win_w {
-                        win_w as f64 / img_w as f64
-                    } else  {
-                        1.0
-                    };
+                let img_ratio = img_w as f64 / img_h as f64;
+                let win_ratio = win_w as f64 / win_h as f64;
 
-                let y_scale =
-                    if img_h > win_h {
-                        win_h as f64 / img_h as f64
-                    } else  {
-                        1.0
-                    };
+                let scale = if win_ratio > img_ratio {
+                    win_h as f64 / img_h as f64
+                } else {
+                    win_w as f64 / img_w as f64
+                };
+
+                let new_w = scale * img_w as f64;
+                let new_h = scale * img_h as f64;
+
+                let x_off = if new_w < win_w as f64 {
+                    (win_w as f64 - new_w) / 2.0
+                } else {
+                    0.0
+                };
+
+                let y_off = if new_h < win_h as f64 {
+                    (win_h as f64 - new_h) / 2.0
+                } else {
+                    0.0
+                };
 
                 let texture = opengl_graphics::Texture::from_image(
                     &picture.to_rgba(),
-                    &texture::TextureSettings::new(),
+                    &texture::TextureSettings::new().convert_gamma(true),
                 );
 
                 graphics::image(
                     &texture,
-                    c.transform.scale(x_scale, y_scale),
+                    c.transform.trans(x_off, y_off).scale(scale, scale),
                     gl,
                 );
+            } else {
+                let black = rectangle::Rectangle::new([0.0, 0.0, 0.0, 1.0]);
+
+                &black.draw(
+                    [0.0, 0.0, win_w as f64, win_h as f64],
+                    &c.draw_state,
+                    c.transform,
+                    gl
+                );
+
             }
         });
     }
