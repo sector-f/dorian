@@ -137,7 +137,7 @@ impl Viewer {
     }
 
     pub fn get_title(&self) -> String {
-        format!("ImageViewer - {}", &self.current_image().path().display())
+        format!("Dorian - {}", &self.current_image().path().display())
     }
 
     pub fn should_close(&self) -> bool {

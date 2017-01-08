@@ -32,7 +32,7 @@ fn main() {
     let opengl = OpenGL::V3_2;
 
     let mut window: PistonWindow<Sdl2Window> = WindowSettings::new(
-        "ImageViewer",
+        "Dorian",
         [800, 600],
     )
     .opengl(opengl)
